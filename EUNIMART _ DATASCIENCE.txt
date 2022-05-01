@@ -1,0 +1,114 @@
+
+from tkinter import *
+import tkinter.messagebox as tsmg
+import requests
+import random
+
+import json
+
+root = Tk()
+
+rand = random.randint(1, 999999)
+
+msg = f"Your One Time Password(OTP) is {rand}"
+
+def sms_send (a ,msg , name , lastname):
+    url="https://www.fast2sms.com/dev/bulk"
+    params={
+        "authorization":"*************",
+        "sender_id": "SMSINI",
+        "message" : msg,
+        "language": "english",
+        "route": "p",
+        "name": name,
+        "lastname":lastname,
+        "numbers": a
+    }
+    rs=requests.get(url, params=params)
+
+
+def send():
+    a = num.get()
+    if(a ==""):
+        tsmg.showerror("Error", "Enter Your Mobile Number")
+    elif (len(a)<10):
+        tsmg.showerror("Error", "Invalid Mobile Number")
+        num.set("")
+    else:
+        b=tsmg.askyesno("Info", f"Your Number is {a}")
+        if(b==True):
+            sms_send(a, msg, name , lastname)
+        else:
+            num.set("")
+
+def check():
+    tsmg.showinfo("Info", "Successful")
+    data = {}
+
+    data[0] = {}
+    data[0]['name'] = name.get();
+    data[0]['lastname'] = lastname.get();
+    data[0]['num']=num.get();
+    root = Tk();
+    root.geometry("500x500");
+    root.title("user-info");
+    f2 = Frame(root)
+    Label(f2, text=data[0]['num'], font="SegoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+    f2.pack();
+    f3 = Frame(root)
+    Label(f3, text=data[0]['name'], font="SegoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+    f3.pack();
+    f4 = Frame(root)
+    Label(f4, text=data[0]['lastname'], font="SegoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+    f4.pack();
+
+    '''c = otp.get()
+    if(c==""):
+        tsmg.showerror("Error", "Enter OTP")
+    else:
+        if():
+            tsmg.showinfo("Info", "Successful")
+        else:
+            tsmg.showerror("Error", "Invalid OTP")
+            num.set("")
+            otp.set("")'''
+
+
+root.geometry("500x500")
+root.title("OTP-Checkers")
+
+num = StringVar()
+name = StringVar()
+otp = StringVar()
+lastname=StringVar()
+
+f1 = Frame(root)
+Label(f1, text="Check Your OTP", font="SegoeUI 30 bold", fg="purple").pack(padx=5, pady=10)
+f1.pack(fill=BOTH)
+
+f2 = Frame(root)
+Label(f2, text="Enter Your Number", font="SegoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+e1 = Entry(f2, textvariable = num, font = "SegoeUI 14 bold", fg = "black", bg = "white", relief=SUNKEN, borderwidth=4,justify="center").pack(ipady=5)
+f2.pack(fill=BOTH, padx=5, pady=10)
+
+f3 =Frame(root)
+Label(f3, text="Enter your First Name", font="SegoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+e2 = Entry(f3, textvariable = name,font="SegoeUI 14 bold", fg="black" ,bg="white" ,relief=SUNKEN, borderwidth=5 , justify="center").pack(ipady=5)
+f3.pack(fill=BOTH, padx=5, pady=10)
+
+f4 =Frame(root)
+Label(f4, text="Enter your Last Name", font="segoeUI 20 bold", fg="teal").pack(padx=5, pady=5)
+e3 = Entry(f4, textvariable= lastname, font="SegoeUI 14 bold", fg="black" ,bg="white" ,relief=SUNKEN, borderwidth=5 , justify="center").pack(ipady=5)
+f4.pack(fill=BOTH, padx=5, pady=10)
+
+f5 =Frame(root)
+Label(f4, text="Enter OTP", font="SegoeUI 20 bold", fg="teal").pack(padx=5,pady=5)
+e4 =Entry(f5, textvariable=otp,font="SegoeUI 14 bold",fg="black",bg="white",relief=SUNKEN,borderwidth=6,justify="center").pack(ipady=5)
+f5.pack(fill=BOTH, padx=5, pady=10)
+
+f6 =Frame(root)
+Button(f6, text="Send OTP", command=send, font="SegoeUI 10 bold", fg="purple").pack(padx=20, pady=10, side=LEFT)
+Button(f6, text="Check OTP", command=check, font="SegoeUI 10 bold", fg="purple").pack(padx=40, pady=10, side=LEFT)
+f6.pack()
+
+root.mainloop()
